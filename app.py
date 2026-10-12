@@ -4,9 +4,9 @@ from prometheus_flask_exporter import PrometheusMetrics
 app = Flask(__name__)
 PrometheusMetrics(app)  # exposes /metrics
  
-@app.route("/")@app.route("/")
+@app.route("/")@app.route("/")@app.route("/")
 def home():
-    return "Hello from DevOps Pipeline - v1"
+    return "Hello from DevOps Pipeline - v2"
  
 @app.route("/health")
 def health():
