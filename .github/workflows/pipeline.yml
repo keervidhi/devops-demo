@@ -34,3 +34,25 @@ jobs:
         run: docker build -t $IMAGE .
       - name: Push image
         run: docker push $IMAGE
+
+        
+  deploy:
+    needs: package
+    runs-on: self-hosted
+    steps:
+      - name: Pull Docker image
+        run: docker pull ghcr.io/keervidhi/devops-demo:latest
+
+      - name: Replace running container
+        shell: powershell
+        run: |
+          $existing = docker ps -aq --filter "name=devops-demo-app"
+          if ($existing) {
+            docker rm -f devops-demo-app
+          }
+          if ($LASTEXITCODE -ne 0) {
+            exit $LASTEXITCODE
+          }
+
+      - name: Run application
+        run: docker run -d --restart unless-stopped -p 5000:5000 --name devops-demo-app ghcr.io/keervidhi/devops-demo:latest
